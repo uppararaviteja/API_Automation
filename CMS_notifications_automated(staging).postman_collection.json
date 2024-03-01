@@ -1,0 +1,738 @@
+{
+	"info": {
+		"_postman_id": "7bd54b1c-653e-4308-b184-2643eafc6f4d",
+		"name": "CMS_notifications_automated(staging)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31933265"
+	},
+	"item": [
+		{
+			"name": "createCampaignOffer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//capturing the id variable",
+							"var responseBody = pm.response.json();",
+							"",
+							"// Extract the id value",
+							"var id = responseBody.data.createCampaignOffer.id;",
+							"",
+							"// Set the id value as a Postman environment variable",
+							"pm.collectionVariables.set(\"NotificationId\", id);",
+							"console.log(id);",
+							"",
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"//creating random titles\r",
+							"let x = Math.floor((Math.random() * 100) + 1);\r",
+							"pm.collectionVariables.set(\"title\", \"Testing from hudini\"+x);\r",
+							"\r",
+							"\r",
+							"// //creating random time\r",
+							"// var currentTime = new Date();\r",
+							"// var futureTime = new Date(currentTime.getTime() + 30 * 60 * 60 * 1000); // Add 30 mins\r",
+							"// var futureTimeString = futureTime.getHours() + ':' + (futureTime.getMinutes() < 10 ? '0' : '') + futureTime.getMinutes();\r",
+							"// pm.collectionVariables.set(\"futureTime\", futureTimeString);\r",
+							"\r",
+							"//creating 30mins future time\r",
+							"// Get current time\r",
+							"var currentTime = new Date();\r",
+							"\r",
+							"// Calculate future time 30 minutes ahead\r",
+							"var futureTime = new Date(currentTime.getTime() + 30 * 60 * 1000); // Add 30 minutes\r",
+							"\r",
+							"// Extract hours and minutes from the future time\r",
+							"var hours = futureTime.getHours();\r",
+							"var minutes = futureTime.getMinutes();\r",
+							"\r",
+							"// Format hours and minutes to ensure they are in two digits\r",
+							"var formattedHours = (hours < 10 ? '0' : '') + hours;\r",
+							"var formattedMinutes = (minutes < 10 ? '0' : '') + minutes;\r",
+							"\r",
+							"// Combine hours and minutes in HH:MM format\r",
+							"var futureTimeString = formattedHours + ':' + formattedMinutes;\r",
+							"\r",
+							"// Set the future time as a collection variable\r",
+							"pm.collectionVariables.set(\"futureTime\", futureTimeString);\r",
+							"\r",
+							"//creating future date\r",
+							"var currentDate = new Date();\r",
+							"var futureDate = new Date(currentDate.getTime() + 1 * 24 * 60 * 60 * 1000); // Add 1 days\r",
+							"var day = futureDate.getDate();\r",
+							"var month = futureDate.getMonth() + 1; // Month starts from 0\r",
+							"var year = futureDate.getFullYear();\r",
+							"// Add leading zero if day or month is single digit\r",
+							"if (day < 10) {\r",
+							"    day = '0' + day;\r",
+							"}\r",
+							"if (month < 10) {\r",
+							"    month = '0' + month;\r",
+							"}\r",
+							"// Format future date as dd-mm-yyyy\r",
+							"var futureDateString = day + '-' + month + '-' + year;\r",
+							"// Set the variable\r",
+							"pm.collectionVariables.set(\"futureDate\", futureDateString);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"hotelId\":\"{{hotelid}}\",\"type\":\"F&B\",\"title\":\"{{title}}\",\"message\":\"{{message}}\",\"devices\":[\"Mobile\"],\"recipient\":\"{{recipientTypeNonresident}}\",\"images\":[],\"offerSchedule\":{\"schedule\":\"One-time\",\"impressionsDay\":\"2\",\"oneTimeSchedule\":{\"date\":\"{{futureDate}}\",\"time\":\"{{futureTime}}\"},\"repeatSchedule\":{\"from\":\"\",\"to\":\"\",\"everyday\":true,\"days\":[],\"time\":\"\"}},\"timezone\":\"Asia/Calcutta\",\"timeOffset\":-330,\"residentFloor\":\"\",\"residentRoomType\":\"\",\"residentRoom\":\"\",\"residentRoomTypeIds\":[],\"residentFloorIds\":[],\"lang\":\"\"},\"query\":\"mutation MyMutation($hotelId: String!, $type: String!, $title: String!, $message: String!, $devices: [String]!, $recipient: String, $images: [ImagesInput], $offerSchedule: OfferScheduleInput!, $timezone: String!, $timeOffset: String, $residentFloor: [String], $residentRoomType: [String], $residentRoom: [String], $residentFloorIds: [String], $residentRoomTypeIds: [String], $lang: String!) {\\n  createCampaignOffer(\\n    input: {hotelId: $hotelId, type: $type, title: $title, message: $message, devices: $devices, recipient: $recipient, images: $images, offerSchedule: $offerSchedule, timezone: $timezone, timeOffset: $timeOffset, residentFloor: $residentFloor, residentRoomType: $residentRoomType, residentRoom: $residentRoom, residentFloorIds: $residentFloorIds, residentRoomTypeIds: $residentRoomTypeIds, lang: $lang}\\n  ) {\\n    id\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://api-properties-v3.hudinielevate-stage.io/graphql"
+			},
+			"response": []
+		},
+		{
+			"name": "updateCampaignOffer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"id\":\"{{NotificationId}}\",\"hotelId\":\"{{hotelid}}\",\"type\":\"F&B\",\"title\":\"{{title}}\",\"message\":\"{{message}}\",\"devices\":[\"Mobile\"],\"recipient\":\"{{recipientTypeNonresident}}\",\"images\":[],\"offerSchedule\":{\"schedule\":\"One-time\",\"impressionsDay\":2,\"oneTimeSchedule\":{\"date\":\"{{futureDate}}\",\"time\":\"{{futureTime}}\"},\"repeatSchedule\":{\"from\":\"\",\"to\":\"\",\"everyday\":true,\"days\":[],\"time\":\"\"}},\"timezone\":\"Asia/Calcutta\",\"timeOffset\":-330,\"residentFloor\":[\"\"],\"residentRoomType\":[\"\"],\"residentRoom\":[\"\"],\"residentRoomTypeIds\":[null],\"residentFloorIds\":[null],\"lang\":\"\"},\"query\":\"mutation MyMutation($id: String!, $hotelId: String!, $type: String!, $title: String!, $message: String!, $devices: [String]!, $recipient: String, $images: [ImagesInput], $offerSchedule: OfferScheduleInput!, $timezone: String!, $timeOffset: String, $residentFloor: [String], $residentRoomType: [String], $residentRoom: [String], $residentFloorIds: [String], $residentRoomTypeIds: [String], $lang: String!) {\\n  updateCampaignOffer(\\n    input: {id: $id, hotelId: $hotelId, type: $type, title: $title, message: $message, devices: $devices, recipient: $recipient, images: $images, offerSchedule: $offerSchedule, timezone: $timezone, timeOffset: $timeOffset, residentFloor: $residentFloor, residentRoomType: $residentRoomType, residentRoom: $residentRoom, residentFloorIds: $residentFloorIds, residentRoomTypeIds: $residentRoomTypeIds, lang: $lang}\\n  ) {\\n    id\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://api-properties-v3.hudinielevate-stage.io/graphql"
+			},
+			"response": []
+		},
+		{
+			"name": "deactivateCampaignOffer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"id\":\"{{NotificationId}}\",\"hotelId\":\"{{hotelid}}\",\"lang\":\"\",\"state\":false},\"query\":\"mutation MyMutation($id: String!, $hotelId: String!, $lang: String!, $state: Boolean!) {\\n  deactivateCampaignOffer(\\n    input: {id: $id, hotelId: $hotelId, lang: $lang, state: $state}\\n  ) {\\n    message\\n    status\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "getCampaignOffer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"query\": \"query MyQuery { getCampaignOffer(input: {id: \\\"{{NotificationId}}\\\", hotelId: \\\"{{hotelid}}\\\", lang: \\\"\\\"}) { brandId createdAt createdBy devices groupId hotelId id isActive message offerSchedule { impressionsDay oneTimeSchedule { date time } schedule } pk recipient residentFloor residentRoom residentRoomType sk status title type updatedAt updatedBy version }}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "getCampaignOffersDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"query\": \"query MyQuery { getCampaignOffersDetails(input: {hotelId: \\\"{{hotelid}}\\\", lang: \\\"\\\"}) { brandId createdAt createdBy devices groupId hotelId id isActive message offerSchedule { impressionsDay oneTimeSchedule { date time } schedule repeatSchedule { days everyday from time to } } pk recipient residentFloor residentRoom residentRoomType sk status title type updatedAt updatedBy version }}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCampaignOffer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"id\":\"{{NotificationId}}\",\"hotelId\":\"{{hotelid}}\",\"lang\":\"\"},\"query\":\"mutation MyMutation($id: String!, $hotelId: String!, $lang: String!) {\\n  deleteCampaignOffer(input: {id: $id, hotelId: $hotelId, lang: $lang}) {\\n    message\\n    status\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "createCampaignOffer_today",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//capturing the id variable",
+							"var responseBody = pm.response.json();",
+							"",
+							"// Extract the id value",
+							"var id = responseBody.data.createCampaignOffer.id;",
+							"",
+							"// Set the id value as a Postman environment variable",
+							"pm.collectionVariables.set(\"NotificationId\", id);",
+							"console.log(id);",
+							"",
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"//creating random titles\r",
+							"let x = Math.floor((Math.random() * 100) + 1);\r",
+							"pm.collectionVariables.set(\"title\", \"Testing from hudini_today\"+x);\r",
+							"\r",
+							"\r",
+							"//creating 30mins future time\r",
+							"// Get current time\r",
+							"var currentTime = new Date();\r",
+							"\r",
+							"// Calculate future time 30 minutes ahead\r",
+							"var futureTime = new Date(currentTime.getTime() + 30 * 60 * 1000); // Add 30 minutes\r",
+							"\r",
+							"// Extract hours and minutes from the future time\r",
+							"var hours = futureTime.getHours();\r",
+							"var minutes = futureTime.getMinutes();\r",
+							"\r",
+							"// Format hours and minutes to ensure they are in two digits\r",
+							"var formattedHours = (hours < 10 ? '0' : '') + hours;\r",
+							"var formattedMinutes = (minutes < 10 ? '0' : '') + minutes;\r",
+							"\r",
+							"// Combine hours and minutes in HH:MM format\r",
+							"var futureTimeString = formattedHours + ':' + formattedMinutes;\r",
+							"\r",
+							"// Set the future time as a collection variable\r",
+							"pm.collectionVariables.set(\"todayTime\", futureTimeString);\r",
+							"//pm.environment.set(\"todayTime\", futureTimeString);\r",
+							"\r",
+							"\r",
+							"//creating future date\r",
+							"// Get current date\r",
+							"var currentDate = new Date();\r",
+							"\r",
+							"// Extract day, month, and year\r",
+							"var day = currentDate.getDate();\r",
+							"var month = currentDate.getMonth() + 1; // Adding 1 because months are zero-based\r",
+							"var year = currentDate.getFullYear();\r",
+							"\r",
+							"// Add leading zeros if day or month is single-digit\r",
+							"var formattedDay = (day < 10 ? '0' : '') + day;\r",
+							"var formattedMonth = (month < 10 ? '0' : '') + month;\r",
+							"\r",
+							"// Format date as dd-mm-yyyy\r",
+							"var formattedDate = formattedDay + '-' + formattedMonth + '-' + year;\r",
+							"\r",
+							"// Set the formatted date as an environment variable\r",
+							"pm.collectionVariables.set(\"todayDate\", formattedDate);\r",
+							"//pm.environment.set(\"todayDate\", formattedDate);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"hotelId\":\"{{hotelid}}\",\"type\":\"F&B\",\"title\":\"{{title}}\",\"message\":\"{{message}}\",\"devices\":[\"Mobile\"],\"recipient\":\"{{recipientTypeResident}}\",\"images\":[],\"offerSchedule\":{\"schedule\":\"One-time\",\"impressionsDay\":\"2\",\"oneTimeSchedule\":{\"date\":\"{{todayDate}}\",\"time\":\"{{todayTime}}\"},\"repeatSchedule\":{\"from\":\"\",\"to\":\"\",\"everyday\":true,\"days\":[],\"time\":\"\"}},\"timezone\":\"Asia/Calcutta\",\"timeOffset\":-330,\"residentFloor\":\"\",\"residentRoomType\":\"\",\"residentRoom\":\"\",\"residentRoomTypeIds\":[],\"residentFloorIds\":[],\"lang\":\"\"},\"query\":\"mutation MyMutation($hotelId: String!, $type: String!, $title: String!, $message: String!, $devices: [String]!, $recipient: String, $images: [ImagesInput], $offerSchedule: OfferScheduleInput!, $timezone: String!, $timeOffset: String, $residentFloor: [String], $residentRoomType: [String], $residentRoom: [String], $residentFloorIds: [String], $residentRoomTypeIds: [String], $lang: String!) {\\n  createCampaignOffer(\\n    input: {hotelId: $hotelId, type: $type, title: $title, message: $message, devices: $devices, recipient: $recipient, images: $images, offerSchedule: $offerSchedule, timezone: $timezone, timeOffset: $timeOffset, residentFloor: $residentFloor, residentRoomType: $residentRoomType, residentRoom: $residentRoom, residentFloorIds: $residentFloorIds, residentRoomTypeIds: $residentRoomTypeIds, lang: $lang}\\n  ) {\\n    id\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://api-properties-v3.hudinielevate-stage.io/graphql"
+			},
+			"response": []
+		},
+		{
+			"name": "updateCampaignOffer_today",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"id\":\"{{NotificationId}}\",\"hotelId\":\"{{hotelid}}\",\"type\":\"F&B\",\"title\":\"{{title}}\",\"message\":\"{{message}}\",\"devices\":[\"Mobile\"],\"recipient\":\"{{recipientTypeNonresident}}\",\"images\":[],\"offerSchedule\":{\"schedule\":\"One-time\",\"impressionsDay\":2,\"oneTimeSchedule\":{\"date\":\"{{todayDate}}\",\"time\":\"{{todayTime}}\"},\"repeatSchedule\":{\"from\":\"\",\"to\":\"\",\"everyday\":true,\"days\":[],\"time\":\"\"}},\"timezone\":\"Asia/Calcutta\",\"timeOffset\":-330,\"residentFloor\":[\"\"],\"residentRoomType\":[\"\"],\"residentRoom\":[\"\"],\"residentRoomTypeIds\":[null],\"residentFloorIds\":[null],\"lang\":\"\"},\"query\":\"mutation MyMutation($id: String!, $hotelId: String!, $type: String!, $title: String!, $message: String!, $devices: [String]!, $recipient: String, $images: [ImagesInput], $offerSchedule: OfferScheduleInput!, $timezone: String!, $timeOffset: String, $residentFloor: [String], $residentRoomType: [String], $residentRoom: [String], $residentFloorIds: [String], $residentRoomTypeIds: [String], $lang: String!) {\\n  updateCampaignOffer(\\n    input: {id: $id, hotelId: $hotelId, type: $type, title: $title, message: $message, devices: $devices, recipient: $recipient, images: $images, offerSchedule: $offerSchedule, timezone: $timezone, timeOffset: $timeOffset, residentFloor: $residentFloor, residentRoomType: $residentRoomType, residentRoom: $residentRoom, residentFloorIds: $residentFloorIds, residentRoomTypeIds: $residentRoomTypeIds, lang: $lang}\\n  ) {\\n    id\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "deactivateCampaignOffer_today",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"id\":\"{{NotificationId}}\",\"hotelId\":\"{{hotelid}}\",\"lang\":\"\",\"state\":false},\"query\":\"mutation MyMutation($id: String!, $hotelId: String!, $lang: String!, $state: Boolean!) {\\n  deactivateCampaignOffer(\\n    input: {id: $id, hotelId: $hotelId, lang: $lang, state: $state}\\n  ) {\\n    message\\n    status\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "getCampaignOffer_today",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"query\": \"query MyQuery { getCampaignOffer(input: {id: \\\"{{NotificationId}}\\\", hotelId: \\\"{{hotelid}}\\\", lang: \\\"\\\"}) { brandId createdAt createdBy devices groupId hotelId id isActive message offerSchedule { impressionsDay oneTimeSchedule { date time } schedule } pk recipient residentFloor residentRoom residentRoomType sk status title type updatedAt updatedBy version }}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "getCampaignOffersDetails_today",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"query\": \"query MyQuery { getCampaignOffersDetails(input: {hotelId: \\\"{{hotelid}}\\\", lang: \\\"\\\"}) { brandId createdAt createdBy devices groupId hotelId id isActive message offerSchedule { impressionsDay oneTimeSchedule { date time } schedule repeatSchedule { days everyday from time to } } pk recipient residentFloor residentRoom residentRoomType sk status title type updatedAt updatedBy version }}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCampaignOffer_today",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{authorization}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"operationName\":\"MyMutation\",\"variables\":{\"id\":\"{{NotificationId}}\",\"hotelId\":\"{{hotelid}}\",\"lang\":\"\"},\"query\":\"mutation MyMutation($id: String!, $hotelId: String!, $lang: String!) {\\n  deleteCampaignOffer(input: {id: $id, hotelId: $hotelId, lang: $lang}) {\\n    message\\n    status\\n  }\\n}\\n\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://api-properties-v3.hudinielevate-stage.io/graphql",
+			"type": "string"
+		},
+		{
+			"key": "hotelid",
+			"value": "0792d26e-d881-4362-9a28-a1af2c70a97d",
+			"type": "string"
+		},
+		{
+			"key": "message",
+			"value": "Testing from hudini-please ignore",
+			"type": "string"
+		},
+		{
+			"key": "recipientTypeBoth",
+			"value": "Both",
+			"type": "string"
+		},
+		{
+			"key": "recipientTypeResident",
+			"value": "Resident",
+			"type": "string"
+		},
+		{
+			"key": "recipientTypeNonresident",
+			"value": "Non-resident",
+			"type": "string"
+		},
+		{
+			"key": "date",
+			"value": "\"27-02-2024\"",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "time",
+			"value": "\"21:00\"",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "authorization",
+			"value": "eyJraWQiOiIzM2l6WHpUNjZoaGEreTlwbU96VVwvNXBDQmRtOFlaSCtZSU01XC9yYm0rSVE9IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJiYjc1M2NhMy1kNmU2LTQwNWItOWI1OS1kODkyMWYzZjJhZTUiLCJjdXN0b206cm9sZXMiOiJbXCJDT05URU5UX01BTkFHRVJcIixcIkZST05UX0RFU0tfQURNSU5cIixcIkZuQl9NQU5BR0VSXCIsXCJIT1VTRV9LRUVQSU5HX01BTkFHRVJcIixcIklUX01BTkFHRVJcIixcIk1BUktFVElOR19NQU5BR0VSXCIsXCJTUEFfTUFOQUdFUlwiLFwiSE9URUxfQURNSU5cIl0iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoLTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGgtMV9qTVBYMkF6Wm0iLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOmZhbHNlLCJjb2duaXRvOnVzZXJuYW1lIjoiYmI3NTNjYTMtZDZlNi00MDViLTliNTktZDg5MjFmM2YyYWU1IiwiY3VzdG9tOm1ldGFfZGF0YSI6IntcImdyb3VwSWRcIjpcImJhODcxOGI0LWFkYzYtNDQ4MS05Njc2LTUyZjc4ODRiOWM0NVwiLFwiYnJhbmRJZFwiOlwiZWZjNzY3MmQtOTM1OC00OGNiLTlkODgtYzQyZTIxNWFlOGFjXCIsXCJob3RlbElkXCI6XCIwNzkyZDI2ZS1kODgxLTQzNjItOWEyOC1hMWFmMmM3MGE5N2RcIixcImRlcGFydG1lbnRJZFwiOlwiXCIsXCJyb2xlXCI6XCJDdXN0b20gUm9sZVwiLFwicmVzdGF1cmFudElkXCI6XCJcIn0iLCJnaXZlbl9uYW1lIjoidXBwYXJhIiwib3JpZ2luX2p0aSI6IjU5OWE3ZjlhLTM3MzktNDg3OC1hNmMwLTUzZDQ3NjcyNDM0OCIsImF1ZCI6Ijd2OGUyYmVmMnIzODk4aXR2dTI4bDlmdXEiLCJldmVudF9pZCI6ImUzZGEwMTZlLWI1YWItNDNlMC05YWIzLTI1ZjBmNTFkYTE0ZSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNzA5MDk1NDA5LCJjdXN0b206c3RhdHVzIjoiYWN0aXZlIiwicGhvbmVfbnVtYmVyIjoiKzkxOTk5OTk5OTk5OSIsImV4cCI6MTcwOTA5OTAwOSwiY3VzdG9tOnBlcm1pc3Npb25zIjoie1wiZ3JvdXBzXCI6MSxcImJyYW5kc1wiOjEsXCJob3RlbHNcIjoyLFwiZGV2aWNlUmVnaXN0cmF0aW9uXCI6MCxcInJlc3RhdXJhbnRcIjoyLFwic3BhXCI6MixcInJvb21zXCI6MCxcImxhbmd1YWdlQ29uZmlnXCI6MCxcIm5vdGlmaWNhdGlvbkNvbmZpZ1wiOjAsXCJwZXJtaXNzaW9uc1wiOjAsXCJyb2xlc1wiOjAsXCJhY2NvdW50c1wiOjAsXCJpblJvb21EaW5pbmdcIjoyLFwiaG91c2VLZWVwaW5nXCI6MCxcImRlcGxveW1lbnRDb25maWdcIjowLFwiY2l0eUd1aWRlXCI6MixcIm9mZmVyc1wiOjIsXCJhbWVuaXRpZXNcIjoyLFwiYWNjb21tb2RhdGlvbnNcIjoyLFwibG95YWx0eVwiOjAsXCJyZWRpcmVjdFVybFwiOjAsXCJmZWVkYmFja1wiOjIsXCJlbWFpbENvbmZpZ3VyYXRpb25cIjoyLFwidHZDaGFubmVsc1wiOjIsXCJyZXBvcnRzXCI6MCxcImxvY2F0aW9uXCI6MyxcImhvdGVsU3lzdGVtc1wiOjAsXCJ2ZW5kb3JDb25maWdcIjowLFwiZGVzaWduQ29uZmlnc1wiOjIsXCJ1c2Vyc1wiOjIsXCJzZXJ2aWNlUmVxdWVzdFwiOjIsXCJub3RpZmljYXRpb25zXCI6MixcInRlbGVwaG9ueVwiOjIsXCJvcmRlclRyYW5zYWN0aW9uXCI6MCxcInJlc3RhdXJhbnREYXNoYm9hcmRcIjoyLFwic3BhRGFzaGJvYXJkXCI6MixcImFjY29tbW9kYXRpb25EYXNoYm9hcmRcIjoyLFwiaW5Sb29tRGluaW5nRGFzaGJvYXJkXCI6MixcInNlcnZpY2VSZXF1ZXN0RGFzaGJvYXJkXCI6MixcImRldmljZU1vbml0b3JpbmdcIjoyLFwiZkFuZEJEYXNoYm9hcmRcIjoyLFwiYW5hbHl0aWNzXCI6MixcImFwcFVzYWdlUmVwb3J0XCI6MixcInJlc3RhdXJhbnRSZXBvcnRcIjoyLFwiaW5Sb29tRGluaW5nUmVwb3J0XCI6MixcImhvdXNlS2VlcGluZ1JlcG9ydFwiOjIsXCJzcGFSZXBvcnRcIjoyLFwiZGlnaXRhbENoZWNrSW5SZXBvcnRcIjoyLFwiYWN0aXZpdHlcIjowLFwicGF5bWVudHNcIjowfSIsImN1c3RvbTpyb2xlIjoiY2ZmMDRlYzgtMTZiNC00OTE3LWJkY2EtZGFkMDczNDExYzEwIiwiY3VzdG9tOnVzZXJfdHlwZSI6ImNtcyIsImlhdCI6MTcwOTA5NTQwOSwiZmFtaWx5X25hbWUiOiJyYXZpdGVqYSIsImp0aSI6IjI0N2YwOGEwLWUzMDUtNGJjZi04MTJhLTJkZGNjOTVmYmQ0ZiIsImVtYWlsIjoidXBwYXJhLnJhdml0ZWphQGh1ZGluaS5pbyJ9.o5KdYXGUJPiCyRs0s5w8sp_rzT74M9EqYfqcwjLViM8uLpMDrbF7egDjVISwdlm1XuQv2NkkHRhNfElry5JBNBioed2BI_g8dgbMnBBuhwRtw65mRwZW_s6ZQSCxrc4SPSqN0ovTvR6uJrTxWJCKSkUXqUTZx1N36jx-MgohGJkZUGaXzJCJU6nf44h3B1IUrJzVLoYVUFu6FBaPAiS5UDPfqp7ZkGxNkABW-xgIxAivV3PWdeFlcWq3vJEKApXh7bU9icbtGOf9p73YIezyBQpjOZlQ3Y7w8St5l_Bosxi8enWSCME7LGOgGomSdka_XGHLpbiexzPy9bPW1ipS_A",
+			"type": "string"
+		},
+		{
+			"key": "timeBegin",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "title",
+			"value": "Testing from hudini100"
+		},
+		{
+			"key": "NotificationId",
+			"value": "1624318f-5abe-4b4d-ab86-36cd3e09f7be"
+		},
+		{
+			"key": "futureTime",
+			"value": "10:20",
+			"type": "string"
+		},
+		{
+			"key": "futureDate",
+			"value": null,
+			"type": "string"
+		},
+		{
+			"key": "responseTime",
+			"value": ""
+		},
+		{
+			"key": "todayDate",
+			"value": ""
+		},
+		{
+			"key": "todayTime",
+			"value": ""
+		}
+	]
+}
